@@ -1,0 +1,34 @@
+name: 🚀 deploy website on push
+
+on:
+  release: 
+    types: [ released ]
+
+jobs:
+  deploy:
+    name: 🌝 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: ⏰ Get latest code
+      uses: actions/checkout@v2.3.2
+      
+    - name: Install Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      
+    - name: 📂 Sync files
+      uses: SamKirland/FTP-Deploy-Action@4.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          cd ~/project
+          
+          php artisan cache:clear
+          php artisan config:cache
+          php artisan route:cache
+          php artisan storage:link
+          
