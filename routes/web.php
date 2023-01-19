@@ -28,3 +28,15 @@ require __DIR__.'/auth.php';
 Route::prefix('/member')->group(function () {
     Route::get('/', [Member::class, 'index'])->name('member.index');
 });
+
+/*
+Route::get('/test', function () {
+    return view('welcome');
+});
+Route::put('/test', function () {
+    return view('welcome');
+});
+Route::delete('/test', function () {
+    return view('welcome');
+});
+*/
