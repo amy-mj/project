@@ -3,23 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Members;
-use App\Models\Campaign;
+use App\Models\Member as member_model;
+//use App\Models\Campaign;
 
 class Member extends Controller
 {
     public function index(Request $request) {
-        echo $request->aa;
+        //echo $request->aa;
 
-        $cm = new Campaign();
-        $cmp = $cm->retrieveGrp3();
-        foreach($cmp as $cp)
-        {
-            print_r($cp);
+        //$cm = new Campaign();
+        //$cmp = $cm->retrieveGrp3();
 
-        }
+        $members = member_model::all();
+        $return  = ['members' => $members];
         
-
-        return view('member.index');
+        return view('member.index', $return);
     }
 }
