@@ -12,9 +12,18 @@ main.main.users.chart-page { margin: 20px 40px 80px 40px; width: 85%; }
 h1.page-title { font-size: 25px; color: #76a4e9; font-family: sans-serif; margin-bottom: 20px; }
 
 /* 콘텐츠 카드 영역 */
-.card { position: relative; display: flex; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid #e3e6f0; border-radius: 0.35rem; }
-.card-header { padding: 0.75rem 1.25rem; margin-bottom: 0; background-color: #f8f9fc;  border-bottom: 1px solid #e3e6f0; }
+.card { position: relative; display: flex; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid #e3e6f0; border-radius: 0.7rem; margin-bottom: 1.5em; }
+.card-header { padding: 0.75rem 1.25rem; margin-bottom: 0; background-color: #f8f9fc;  border-bottom: 1px solid #e3e6f0; border-top-left-radius: 0.7rem; border-top-right-radius: 0.7rem; }
 .card-body { flex: 1 1 auto; min-height: 1px; padding: 1.25rem; }
+
+/* 검색*/
+table.search { width: 100%; }
+table.search ul.area { width:100%; position:relative; list-style:none; }
+table.search li.title { position:relative; height:100%; width:20%; display: inline-block; }
+table.search li.item { position:relative; height:100%; width:70%; display: inline-block; }
+table.search li.item > input { width:100% }
+div.search-right { float:right; }
+div.search-right > button { padding: 10px 10px; }
 
 /* 테이블 */
 table.table { border-collapse: separate; border-spacing: 1px; text-align: center; line-height: 1.5; position: relative; width: 100%; }
@@ -22,4 +31,3 @@ table.table th { padding: 10px; font-weight: bold; vertical-align: top; color: #
 table.table td { padding: 10px; border-bottom: 1px solid #ccc; }
 table.table tbody > tr { background: #eee; }
 table.hover tbody > tr:hover { background: #ddd; }
-

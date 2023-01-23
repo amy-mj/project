@@ -17,31 +17,70 @@
     <!-- search -->
     <div class="card shadow">
         <div class="card-header">
-            <h6 class="text-primary">회원관리 리스트</h6>
+            <h6 class="text-primary">회원관리 검색</h6>
         </div>
         <div class="card-body">
             <div class="responsive">
-                <table class="table" cellspacing="0">
-                    <tbody>
+                <form class="" action="" method="">
+                    <table class="search">
                         <tr>
-                            <th>아이디</th>
-                            <td><input type="text" name="userid"></td>
-                            <th>이름</th>
-                            <td><input type="text" name="name"></td>
-                            <th>이메일</th>
-                            <td><input type="text" name="email"></td>
+                            <td class="form-label">
+                                <label>
+                                    <ul class="area">
+                                        <li class="title">아이디</li>
+                                        <li class="item"><input class="form-input" type="text" name="userid"></li>
+                                    </ul>
+                                </label>
+                            </td>
+                            <td class="form-label">
+                                <label>
+                                    <ul class="area">
+                                        <li class="title">이름</li>
+                                        <li class="item"><input class="form-input" type="text" name="name"></li>
+                                    </ul>
+                                </label>
+                            </td>
                         </tr>
                         <tr>
-                            <th>연락처</th>
-                            <td><input type="text" name="phone"></td>
-                            <th>주소</th>
-                            <td><input type="text" name="address"></td>
+                            <td class="form-label">
+                                <label>
+                                    <ul class="area">
+                                        <li class="title">이메일</li>
+                                        <li class="item"><input class="form-input" type="email" name="email"></li>
+                                    </ul>
+                                </label>
+                            </td>
+                            <td class="form-label">
+                                <label>
+                                    <ul class="area">
+                                        <li class="title">휴대폰번호</li>
+                                        <li class="item"><input class="form-input" type="text" name="phone"></li>
+                                    </ul>
+                                </label>
+                            </td>
                         </tr>
-                    </tbody>
-                </table>
+                        <tr>
+                            <td>
+                                <ul class="area">
+                                    <li class="title">주소</li>
+                                    <li class="item"><input class="form-input" type="text" name="address"></li>
+                                </ul>
+                            </td>
+                            <td>
+                                <div class="search-right">
+                                    <button class="primary-default-btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                        검색
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
         </div>
     </div>
+
     <!-- search -->
     <!-- table -->
     <div class="card shadow">
