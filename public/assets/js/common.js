@@ -68,55 +68,67 @@ const commonForm = {
  * @description 날짜 세팅
  */
 const setDate = {
+    defaultDate : function (defaultDate = 'today') { /* 기간 기본 세팅 */
+        return this.period(defaultDate);
+    },
     period : function (e) { /* 저번주, 이틀 전, 어제, 오늘, 이번주 날짜 세팅 */
-        let thisBtn  = e.currentTarget.dataset.id;
         let period   = [];
         let today    = this.formatDate(); 
         let thisDate = new Date(); /* 저번주, 이번주 계산용 */
+        let selector, thisBtn;
 
-        this._selectBtnCss(e); /* 버튼 클릭 시 css class 토글 */
+        if( e.currentTarget ) {
+            selector    = e.currentTarget;
+            thisBtn     = selector.dataset.id;
+        } else {
+            selector    = document.querySelector(`button[data-id=${e}]`);
+            thisBtn     = e;
+        }
+
+        this._selectBtnCss(selector); /* 버튼 클릭 시 css class 토글 */
         
         switch(thisBtn) {
-            case 'lastweek' : /* 저번주 날짜 : 월요일, 일요일 */
+            case 'lastweek' :       /* 저번주 날짜 : 월요일 ~ 일요일 */
                 let lastweek            = thisDate.getDay() + 6; 
                 let lastweekStartDate   = new Date(thisDate.setDate(thisDate.getDate() - lastweek));
                 let lastweekStart       = this.formatDate(lastweekStartDate);
                 let lastweekEnd         = this.formatDate(new Date(lastweekStartDate.setDate(lastweekStartDate.getDate() + 6)));
-                
-                period = [lastweekStart, lastweekEnd];
+                period                  = [lastweekStart, lastweekEnd];
                 break;
 
-            case 'two_days_ago' :
+            case 'two_days_ago' :   /* 그제 날짜 */
                 let two_days_ago = this.formatDate(new Date(new Date().setDate(new Date().getDate() - 2)));
-
-                period = [two_days_ago, two_days_ago];
+                period           = [two_days_ago, two_days_ago];
                 break;
 
-            case 'yesterday' :
+            case 'yesterday' :      /* 어제 날짜 */
                 let yesterday = this.formatDate(new Date(new Date().setDate(new Date().getDate() - 1)));
-
-                period = [yesterday, yesterday];
+                period        = [yesterday, yesterday];
                 break;
 
-            case 'today' : /* 오늘 날짜 */
+            case 'today' :          /* 오늘 날짜 */
                 period = [today, today];
                 break;
+            
+            case 'two_days_after' : /* 모레 날짜 */
+                let two_days_after = this.formatDate(new Date(new Date().setDate(new Date().getDate() + 2)));
+                period             = [two_days_after, two_days_after];
+                break;
 
-            default : /* 이번주 날짜 : 월요일, 오늘  */
+            default :               /* 이번주 날짜(기본) : 월요일 ~ 오늘  */
                 let thisWeekStartDate = new Date(thisDate.setDate(thisDate.getDate() - thisDate.getDay() + 1));
                 let thisWeek          =  this.formatDate(thisWeekStartDate);
-
-                period = [thisWeek, today];
+                period                = [thisWeek, today];
                 break;
         }
-        //console.log(period);
+
         return period;
     },
     _selectBtnCss : function (e) {
-        e.target.parentElement.querySelectorAll('button').forEach(function (el) {
+        e.parentElement.querySelectorAll('button').forEach(function (el) {
             el.classList.remove('on');
         });
-        e.currentTarget.classList.add('on');
+        e.classList.add('on');
     },
     formatDate : function (date = new Date()) { /* yy-mm-dd 포맷으로 반환 */
         const year  = date.getFullYear();

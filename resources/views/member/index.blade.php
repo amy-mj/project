@@ -28,9 +28,9 @@
                                 <label>
                                     <ul class="area">
                                         <li class="title">등록일</li>
-                                        <li class="item"><input class="form-input datepicker max" type="text" name="created_start" value=""></li>
+                                        <li class="item"><input class="form-input datepicker max" type="text" name="created_start"></li>
                                         <span>~</span>
-                                        <li class="item"><input class="form-input datepicker max" type="text" name="created_end" value="{{ date('Y-m-d') }}"></li>
+                                        <li class="item"><input class="form-input datepicker max" type="text" name="created_end"></li>
                                     </ul>
                                 </label>
                             </td>
@@ -129,10 +129,14 @@
             });
         },
         settingPeriod : function () {
+            // 기본 세팅된 기간 값
+            let defaultPeriod = setDate.defaultDate('thisweek');
+            $("input[name=created_start]").val(defaultPeriod[0]);
+            $("input[name=created_end]").val(defaultPeriod[1]);
+            // 기간 선택
             $("#period_group button").on("click", function(e) {
                 e.preventDefault();
                 let period  = setDate.period(e);
-
                 $("input[name=created_start]").val(period[0]);
                 $("input[name=created_end]").val(period[1]);
             });
