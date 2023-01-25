@@ -9,8 +9,11 @@
         <link rel   = "shortcut icon" href="{{ asset('assets/img/svg/logo.svg') }}" type="image/x-icon">
         <!-- Custom styles -->
         <link rel   = "stylesheet" href="{{ asset('assets/css/style.min.css') }}">
+        <link rel   = "stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
         <link href  = "{{ asset('assets/css/common.css') }}" rel="stylesheet" type="text/css" />
-        <script src = "//code.jquery.com/jquery-latest.min.js"></script>
+        <!--script src = "//code.jquery.com/jquery-latest.min.js"></script-->
+        <script src = "{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script>
+        <script src = "{{ asset('assets/js/jquery-ui.min.js') }}"></script>
         @yield('header_css_js') <!--  페이지에 사용될 CSS와 JS를 임폴트 하는 영역 -->
     </head>
     <body>
@@ -25,6 +28,7 @@
             </main>
             @yield('footer') <!--  푸터 영역 -->
         </div>
+            <script src = "{{ asset('assets/js/common.js') }}"></script>
             @yield('import_js') <!--  스크립트 영역 -->
     </body>
 </html>

@@ -19,7 +19,7 @@
         <div class="sidebar-body">
             <ul class="sidebar-body-menu">
                 <li>
-                    <a class="active" href="/"><span class="icon home" aria-hidden="true"></span>Dashboard</a>
+                    <a href="/"><span class="icon home" aria-hidden="true"></span>Dashboard</a>
                 </li>
                 <li>
                     <a class="show-cat-btn" href="##">
@@ -117,7 +117,8 @@
                     </ul>
                 </li>
                 <li>
-                    <a class="show-cat-btn" href="javascript:void(0);">
+                  <!-- a class="active" -->
+                    <a class="show-cat-btn active" href="javascript:void(0);">
                         <span class="icon user-3" aria-hidden="true"></span>회원관리
                         <span class="category__btn transparent-btn" title="Open list">
                             <span class="sr-only">Open list</span>

@@ -27,16 +27,6 @@ require __DIR__.'/auth.php';
 
 Route::prefix('/member')->group(function () {
     Route::get('/', [Member::class, 'index'])->name('member.index');
+    Route::match(['get', 'post'], '/list', [Member::class, 'list'])->name('member.list');
+    Route::post('/search', [Member::class, 'search'])->name('member.search');
 });
-
-/*
-Route::get('/test', function () {
-    return view('welcome');
-});
-Route::put('/test', function () {
-    return view('welcome');
-});
-Route::delete('/test', function () {
-    return view('welcome');
-});
-*/

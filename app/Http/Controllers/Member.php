@@ -8,15 +8,27 @@ use App\Models\Member as member_model;
 
 class Member extends Controller
 {
-    public function index(Request $request) {
-        //echo $request->aa;
+    public function index(Request $request)
+    {
 
-        //$cm = new Campaign();
-        //$cmp = $cm->retrieveGrp3();
 
-        $members = member_model::all();
-        $return  = ['members' => $members];
+        return view('member.index');
+    }
+
+    public function list(Request $request) 
+    {
+        $where = array();
+        foreach($request->all() as $key => $val) {
+            $$key = $val;
+            $where[$key] = $val;
+        }
+        $return             = ['members' => member_model::retrieve($where)];
         
-        return view('member.index', $return);
+        return  view('member.list', $return);
+    }
+
+    private function printToJson($data)
+    {
+        echo json_encode($data, JSON_UNESCAPED_UNICODE );
     }
 }

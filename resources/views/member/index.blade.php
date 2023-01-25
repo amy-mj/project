@@ -21,10 +21,31 @@
         </div>
         <div class="card-body">
             <div class="responsive">
-                <form class="" action="" method="">
+                <form name="search_form" action="" method="">
                     <table class="search">
                         <tr>
                             <td class="form-label">
+                                <label>
+                                    <ul class="area">
+                                        <li class="title">등록일</li>
+                                        <li class="item"><input class="form-input datepicker max" type="text" name="created_start" value=""></li>
+                                        <span>~</span>
+                                        <li class="item"><input class="form-input datepicker max" type="text" name="created_end" value="{{ date('Y-m-d') }}"></li>
+                                    </ul>
+                                </label>
+                            </td>
+                            <td>
+                                <div class="btn-group" id="period_group">
+                                    <button data-id="lastweek">저번주</button>
+                                    <button data-id="two_days_ago">이틀 전</button>
+                                    <button data-id="yesterday">어제</button>
+                                    <button data-id="today">오늘</button>
+                                    <button data-id="thisweek">이번주</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                        <td class="form-label">
                                 <label>
                                     <ul class="area">
                                         <li class="title">아이디</li>
@@ -40,16 +61,16 @@
                                     </ul>
                                 </label>
                             </td>
-                        </tr>
-                        <tr>
                             <td class="form-label">
                                 <label>
                                     <ul class="area">
                                         <li class="title">이메일</li>
-                                        <li class="item"><input class="form-input" type="email" name="email"></li>
+                                        <li class="item"><input class="form-input" type="email" name="email" ></li>
                                     </ul>
                                 </label>
                             </td>
+                        </tr>
+                        <tr>
                             <td class="form-label">
                                 <label>
                                     <ul class="area">
@@ -58,25 +79,24 @@
                                     </ul>
                                 </label>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <ul class="area">
-                                    <li class="title">주소</li>
-                                    <li class="item"><input class="form-input" type="text" name="address"></li>
-                                </ul>
-                            </td>
-                            <td>
-                                <div class="search-right">
-                                    <button class="primary-default-btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                                        검색
-                                    </button>
-                                </div>
+                            <td class="form-label">
+                                <label>
+                                    <ul class="area">
+                                        <li class="title">주소</li>
+                                        <li class="item"><input class="form-input" type="text" name="address"></li>
+                                    </ul>
+                                </label>
                             </td>
                         </tr>
                     </table>
                 </form>
+                <div class="search-right">
+                    <button class="reset button btn-light">초기화</button>
+                    <button class="search button btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        검색
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -87,47 +107,10 @@
         <div class="card-header">
             <h6 class="text-primary">회원관리 리스트</h6>
         </div>
-        <div class="card-body">
-            <div class="responsive">
-                <table class="table hover" cellspacing="0">
-                    <colgroup>
-                        <col width="60px">
-                        <col width="150px">
-                        <col width="150px">
-                        <col width="200px">
-                        <col width="200px">
-                        <col>
-                        <col width="250px">
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th scope="cols">번호</th>
-                        <th scope="cols">아이디</th>
-                        <th scope="cols">이름</th>
-                        <th scope="cols">이메일</th>
-                        <th scope="cols">연락처</th>
-                        <th scope="cols">주소</th>
-                        <th scope="cols">등록일</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($members as $member)
-                    <tr>
-                        <td>{{ $loop->index + 1 }}</th>
-                        <td>{{ $member->userid }}</th>
-                        <td>{{ $member->name }}</th>
-                        <td>{{ $member->email }}</th>
-                        <td>{{ $member->phone }}</th>
-                        <td>{{ $member->address }}</th>
-                        <td>{{ $member->created_at }}</th>
-                    </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <div class="card-body" id="member_list"></div>
     </div>
      <!-- table -->
+
 @stop
 <!-- 푸터에는 layouts/footer.blade.php의 내용을 가져온다. -->
 @section('footer')
@@ -135,5 +118,45 @@
 @stop
 <!-- 페이지에 사용되는 js를 임폴트 한다. -->
 @section('import_js') 
-    <!--script src="/js/common_menu.js"></script-->
+<script>
+    let form = {
+        init : function () {
+            let _self = this;
+            _self.list();
+            _self.settingPeriod();
+            $("button.search").on("click", function() {
+                _self.list();
+            });
+        },
+        settingPeriod : function () {
+            $("#period_group button").on("click", function(e) {
+                e.preventDefault();
+                let period  = setDate.period(e);
+
+                $("input[name=created_start]").val(period[0]);
+                $("input[name=created_end]").val(period[1]);
+            });
+        },
+        list : function () {
+            $.ajax({
+                headers     : { 'X-CSRF-TOKEN': `{{ csrf_token() }}` },
+                url         : '/member/list',
+                type        : 'POST',
+                data        : commonForm.thisForm.serialize(),
+                contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+                dataType    : 'html',
+                success     : function(html) {
+                   $("#member_list").html(html);
+                },
+                error       : function(request, status, error) {
+                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            })
+        } // search end
+    } // form end
+
+    $(function() {
+        form.init();
+    })
+</script>
 @stop
