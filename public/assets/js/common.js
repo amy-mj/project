@@ -68,7 +68,7 @@ const commonForm = {
  * @description 날짜 세팅
  */
 const setDate = {
-    defaultDate : function (defaultDate = 'today') { /* 기간 기본 세팅 */
+    defaultDate : function (defaultDate = 'all') { /* 기간 기본 세팅 */
         return this.period(defaultDate);
     },
     period : function (e) { /* 저번주, 이틀 전, 어제, 오늘, 이번주 날짜 세팅 */
@@ -97,8 +97,8 @@ const setDate = {
                 break;
 
             case 'two_days_ago' :   /* 그제 날짜 */
-                let two_days_ago = this.formatDate(new Date(new Date().setDate(new Date().getDate() - 2)));
-                period           = [two_days_ago, two_days_ago];
+                let twoDaysAgo   = this.formatDate(new Date(new Date().setDate(new Date().getDate() - 2)));
+                period           = [twoDaysAgo, twoDaysAgo];
                 break;
 
             case 'yesterday' :      /* 어제 날짜 */
@@ -111,14 +111,17 @@ const setDate = {
                 break;
             
             case 'two_days_after' : /* 모레 날짜 */
-                let two_days_after = this.formatDate(new Date(new Date().setDate(new Date().getDate() + 2)));
-                period             = [two_days_after, two_days_after];
+                let twoDaysAfter   = this.formatDate(new Date(new Date().setDate(new Date().getDate() + 2)));
+                period             = [twoDaysAfter, twoDaysAfter];
                 break;
 
-            default :               /* 이번주 날짜(기본) : 월요일 ~ 오늘  */
+            case 'thisweek' :       /* 이번주 날짜 : 월요일 ~ 오늘  */
                 let thisWeekStartDate = new Date(thisDate.setDate(thisDate.getDate() - thisDate.getDay() + 1));
                 let thisWeek          =  this.formatDate(thisWeekStartDate);
                 period                = [thisWeek, today];
+                break;
+
+            default :               /* 전체(기본) */
                 break;
         }
 
@@ -139,11 +142,125 @@ const setDate = {
     }
 }
 
+const pageEvent = {
+    form : '',
+    init : function() {
+        const _self = this;
+        _self.form     = commonForm.thisForm;
+        let pagination = $("#dataTable_paginate #pagination");
+        let pageItems  = pagination.find("li");
+        pageItems.on("click", function(e) {
+            _self.click(_self.form, e);
+            $("button.search").click();
+        });
+    },
+    click : function(form, e) {
+        let targetNumber = e.target.dataset.dtIdx;
+        $("input[name=page_num]").remove();
+        let pageNum = $(`<input type="hidden" name="page_num" value="${targetNumber}">`);
+        form.append(pageNum);
+        console.log(targetNumber);
+    },
+}
+
+/**  
+ * @description modal prototype 
+*/
+const modalPop = function(s = {width: 500, top: 150}, b = {}) {
+    this.s = s;
+    this.b = b;
+    this.init();
+}
+
+modalPop.prototype = {
+    modal_id: '',
+    init : function () {
+        this.setting(this.s.width, this.s.top);
+        this.html();
+    },
+    html : function () {
+        const div       = document.createElement('div');
+        div.innerHTML   = ` <div class="modal-dialog">
+                                <div class="modal-header">
+                                    <h2></h2>
+                                    <a href="javascript:void(0);" class="btn-close" aria-hidden="true">×</a>
+                                </div>
+                                <div class="modal-body"></div>
+                                <div class="modal-footer"></div>
+                            </div>  `;
+
+        div.className   = 'modal';
+        div.id          = 'modal-one';
+        this.modal_id   = `#${div.id}`;
+        document.body.appendChild(div);
+    },
+    setting: function(width, top=80) {
+        let _self = this;
+        $(`.modal .modal-dialog`).css({
+            width : width + "px", left : `${($(document).width() - 500)/2}px`, top : `${top}px`
+        });
+    },
+    open : function (title, path, csrf, data={}) {
+        $(".modal").addClass("show");
+        this.title(title);
+        this.contents(path, csrf, data);
+        this.footer(this.b);
+    },
+    title : function (title) {
+        let _self = this;
+        $(`${_self.modal_id} div.modal-header > h2`).html(title);
+    },
+    contents : function (url, csrf, param) {
+        let _self = this;
+
+        $.ajax({
+            headers  : { 'X-CSRF-TOKEN': csrf },
+            url      : url,
+            type     :'POST',
+            data     : param,
+            dataType :'html',
+            success  : function(html) {
+                $(`${_self.modal_id} .modal-body`).html(html);
+                // resize contents
+                if (parseInt(document.querySelector(`${_self.modal_id} .modal-body`).offsetHeight) > 600) {
+                    $(`${_self.modal_id} .modal-body`).css('height', '700px');
+                    $(`${_self.modal_id} .modal-body`).css('overflow-y', 'scroll');
+                }
+            }
+        });
+    },
+    footer : function (button = null) {
+        let _self = this;
+        let btn   = ``;
+        if( button ) {
+            for(let b in button) {
+                switch(b) {
+                    case  '등록' :
+                        btn += `<a href="#" id="${button[b]}" class="btn blue">${b}</a>`;
+                        break;
+                    case  '수정' :
+                        btn += `<a href="#" id="${button[b]}" class="btn blue">${b}</a>`;
+                        break;
+                    case '삭제' :
+                        btn += `<a href="#" id="${button[b]}" class="btn red">${b}</a>`;
+                        break;
+                    default : 
+                        btn += `<a href="#" class="btn blue">확인</a>`;
+                        break;
+                }
+            }
+        }
+        btn += `<a href="${_self.modal_id}" class="btn gray">닫기</a>`;
+
+        $(`${_self.modal_id} .modal-footer`).html(btn);
+        $(`${_self.modal_id} .btn-close`).attr("href", _self.modal_id);
+    }
+} // modalPop end
+
 $("button.reset").on("click", function() { /* 검색 초기화 버튼 이벤트 */
     commonForm.reset();
 });
-
-
+// 검색
 $(function() {
     commonForm.init();
 })

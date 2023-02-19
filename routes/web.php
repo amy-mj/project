@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Member;
+use App\Http\Controllers\MembersController;
+use App\Http\Controllers\Controller;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +15,13 @@ use App\Http\Controllers\Member;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+
+Route::prefix('/')->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+    Route::get('/test', [Controller::class, 'test']);
 });
 
 Route::get('/dashboard', function () {
@@ -26,7 +32,7 @@ require __DIR__.'/auth.php';
 
 
 Route::prefix('/member')->group(function () {
-    Route::get('/', [Member::class, 'index'])->name('member.index');
-    Route::match(['get', 'post'], '/list', [Member::class, 'list'])->name('member.list');
-    Route::post('/search', [Member::class, 'search'])->name('member.search');
+    Route::get('/', [MembersController::class, 'index'])->name('member.index');
+    Route::match(['get', 'post'], '/list', [MembersController::class, 'list'])->name('member.list');
+    Route::post('/register', [MembersController::class, 'register'])->name('member.register');
 });

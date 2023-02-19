@@ -36,6 +36,7 @@
                             </td>
                             <td>
                                 <div class="btn-group" id="period_group">
+                                    <button data-id="all">전체</button>
                                     <button data-id="lastweek">저번주</button>
                                     <button data-id="two_days_ago">이틀 전</button>
                                     <button data-id="yesterday">어제</button>
@@ -107,9 +108,19 @@
         <div class="card-header">
             <h6 class="text-primary">회원관리 리스트</h6>
         </div>
-        <div class="card-body" id="member_list"></div>
+        <div class="card-body responsive table-wrapper dataTables_wrapper">
+            <div id="member_list"></div>
+        </div>
+        
     </div>
      <!-- table -->
+
+
+
+
+<!-- Modal -->
+
+<div class="wrap"> <a href="#" id="modal_click" class="btn btn-big">Modal!</a></div>
 
 @stop
 <!-- 푸터에는 layouts/footer.blade.php의 내용을 가져온다. -->
@@ -119,6 +130,12 @@
 <!-- 페이지에 사용되는 js를 임폴트 한다. -->
 @section('import_js') 
 <script>
+
+    $("#modal_click").on("click", function() {
+        let popup = new modalPop({width: 250}, {'등록':'register'});
+        popup.open('제목목', '/member/register', `{{ csrf_token() }}`);
+    });
+
     let form = {
         init : function () {
             let _self = this;
@@ -130,7 +147,7 @@
         },
         settingPeriod : function () {
             // 기본 세팅된 기간 값
-            let defaultPeriod = setDate.defaultDate('thisweek');
+            let defaultPeriod = setDate.defaultDate();
             $("input[name=created_start]").val(defaultPeriod[0]);
             $("input[name=created_end]").val(defaultPeriod[1]);
             // 기간 선택
